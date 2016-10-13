@@ -30,7 +30,7 @@ trait Filesystem
     {
         return file_exists($path);
     }
-
+    
     /**
      * Create a file at the given path with the given contents.
      *
@@ -41,9 +41,11 @@ trait Filesystem
      */
     public function createFile($path, $contents = '', $lock = false)
     {
+        $this->createDirectory(dirname($path));
+        
         return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
     }
-
+    
     /**
      * Create a directory.
      *
@@ -56,13 +58,13 @@ trait Filesystem
      */
     public function createDirectory($path, $mode = 0755, $recursive = true, $force = true)
     {
-        if ($force) {
+        if($force) {
             return @mkdir($path, $mode, $recursive);
         }
-
+        
         return mkdir($path, $mode, $recursive);
     }
-
+    
     /**
      * Delete an existing file or directory at the given path.
      *
@@ -73,7 +75,7 @@ trait Filesystem
     public function delete($path)
     {
         $filesystem = new SymfonyFilesystem();
-
+        
         $filesystem->remove($path);
     }
 }
